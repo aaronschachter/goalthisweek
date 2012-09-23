@@ -1,0 +1,665 @@
+<?php
+global $base_url;
+// no trailing slash
+define('GTW_URL', 'goalthisweek.com');
+//define('GTW_URL', 'localhost/goalthisweek');
+define('GTW_FB_APP_ID', '193765637336907');
+define('GTW_FB_APP_SECRET', 'e4ca44bdbb922d07cdf62507d7a42544');
+//define('GTW_SEPARATOR', '&rsaquo;&rsaquo;');
+define('GTW_SEPARATOR', ' | ');
+define('FB_ICON', $base_url . '/' . drupal_get_path('module', 'goalthisweek') . '/images/facebook_16.png');
+define('FB_POST_DESC', '<img src="' . FB_ICON . '" class="fb-post">' . t('Post to Timeline'));
+include_once 'goalthisweek.forms.inc';
+
+/**
+ * Implements hook_theme().
+ */
+function goalthisweek_menu() {
+  global $user;
+  
+  $items['home'] = array(
+    'page callback' => 'goalthisweek_home',
+    'access callback' => TRUE,
+  );
+  $items['tos'] = array(
+    'title' => t('Terms of Service'),
+    'page callback' => 'goalthisweek_page_tos',
+    'access callback' => TRUE,
+  );  
+  $items['privacy'] = array(
+    'title' => t('Privacy Policy'),
+    'page callback' => 'goalthisweek_page_privacy',
+    'access callback' => TRUE,
+  );  
+  $items['delete'] = array(
+    'title' => t('Delete FB Action'),
+    'page callback' => 'goalthisweek_page_delete',
+    'description' => 'List, edit, or add user roles.',
+    'access arguments' => array('administer access control'),
+  );     
+  return $items;
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function goalthisweek_theme() {
+  return array(
+    'goalthisweek_user_block' => array(
+      'variables' => array('user' => NULL,),
+      'template' => 'templates/user-info',
+    ),
+    'goalthisweek_user_bar' => array(
+      'variables' => array(
+        'username' => NULL,
+        'uid' => NULL,
+      ),
+      'template' => 'templates/user-bar',
+    ),
+    'goalthisweek_login_block' => array(
+      'variables' => NULL,
+      'template' => 'templates/login-block',
+    ),    
+    'goalthisweek_user_privacy' => array(
+      'variables' => array('user' => NULL,),
+      'template' => 'templates/user-privacy'
+    ),  
+    'goalthisweek_new' => array(
+      'variables' => NULL,
+      'template' => 'templates/goal-new',
+    ),
+    'goalthisweek_profile' => array(
+      'variables' => array(
+        'uid' => NULL,
+        'goal' => NULL,
+      ),
+      'template' => 'templates/profile',
+    ),    
+    'goalthisweek_status' => array(
+      'variables' => array(
+        'node' => NULL,
+      ),
+      'template' => 'templates/goal-status',
+    ),          
+    'goalthisweek_due' => array(
+      'variables' => array(
+        'nid' => NULL,
+      ),
+      'template' => 'templates/goal-due',
+    ), 
+    'goalthisweek_goal' => array(
+      'variables' => array(
+        'node' => NULL,
+      ),
+      'template' => 'templates/goal',
+    ),   
+    'privacy' => array(
+      'variables' => NULL,
+      'template' => 'templates/privacy',
+    ),   
+    'tos' => array(
+      'variables' => NULL,
+      'template' => 'templates/tos',
+    ), 
+    'intro' => array(
+      'variables' => NULL,
+      'template' => 'templates/intro',
+    )        
+  );
+}
+
+
+// page callback - terms of service
+function goalthisweek_page_tos() {
+  return theme('tos');
+}
+
+// page callback - privacy
+function goalthisweek_page_privacy() {
+  return theme('privacy');
+}
+
+// page callback  - delete
+function goalthisweek_page_delete() {
+  return render(drupal_get_form('goalthisweek_form_delete'));
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function goalthisweek_block_info() {
+  $blocks['goalthisweek_user'] = array(
+    'info' => t('gtw user block'),
+  );
+  $blocks['goalthisweek_login'] = array(
+    'info' => t('gtw login block'),
+  );  
+  $blocks['goalthisweek_user_privacy'] = array(
+    'info' => t('gtw user privacy'),
+  );  
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function goalthisweek_block_view($delta) {
+  global $user;
+  switch ($delta) {
+    case 'goalthisweek_user': 
+      $block['content'] = theme('goalthisweek_user_block', array('user' => $user));
+      break;
+    case 'goalthisweek_login':
+      $block['content'] = theme('goalthisweek_login_block');
+      break;    
+    case 'goalthisweek_user_privacy':
+      $block['content'] = theme('goalthisweek_user_privacy', array('user' => $user));
+      break;    
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function goalthisweek_node_view($node, $view_mode = 'full', $langcode = NULL) {
+  // add FB meta tags for a Goal URL
+  if ($node->type == 'goal' && $view_mode == 'full') {
+
+    // store node's username
+    $author = user_load($node->uid);
+    //$node->username = $author->name;
+    $node->username = goalthisweek_get_username($author);
+    $node->user_privacy = $author->field_privacy_profile[LANGUAGE_NONE][0]['value'];
+    
+    // easier variable names
+    $node->is_due = 0;
+    $node->date_start = $node->field_duration['und'][0]['value'];
+    $node->date_due = $node->field_duration['und'][0]['value2'];
+    $node->goal_status =  $node->field_status['und'][0]['value'];
+    // drupal_set_message($node->goal_status);
+    
+    // check status:
+    
+    // if its not active, we just display the goal's status
+    if ($node->goal_status > 0) {
+      $node->content_goal_status = theme('goalthisweek_status', array('node' => $node));
+      $node->time_left = 0;
+    }
+    // else its active:
+    else {
+      // get timeleft
+      $node->time_left = goalthisweek_get_time_left($node);
+
+      global $user;
+      // if its due and its yours
+      if ($node->time_left <= 0 && ($node->uid == $user->uid)) {
+        // display completed/not forms
+        $node->content_goal_status = theme('goalthisweek_due', array('nid' => $node->nid,));
+        $node->is_due = 1;
+      }
+      // otherwise display the countdown status
+      else {
+        $node->content_goal_status = theme('goalthisweek_status', array('node' => $node));
+      }
+    }
+    // theme goal template output into the $node variable
+    $node->content_goal = theme('goalthisweek_goal', array('node' => $node,));
+
+    // ADD FACEBOOK META TAGS
+    // fb_app_id
+    $element = array('#tag' => 'meta', '#attributes' => array(
+      'property' => 'fb:app_id', 'content' => GTW_FB_APP_ID,
+      ),
+    );
+    drupal_add_html_head($element, 'fb_app_id');
+    // og:type
+    $element = array('#tag' => 'meta', '#attributes' => array(
+      'property' => 'og:type', 'content' => 'goalthisweek:goal',
+      ),
+    );
+    drupal_add_html_head($element, 'og_type');
+    // og:title
+    $element = array('#tag' => 'meta', '#attributes' => array(
+      'property' => 'og:title', 'content' => $node->title,
+      ),
+    );
+    drupal_add_html_head($element, 'og_title');
+    // og:url
+    $element = array('#tag' => 'meta', '#attributes' => array(
+      'property' => 'og:url', 'content' => 'http://' . GTW_URL . '/' . drupal_get_path_alias('node/' . $node->nid),
+      ),
+    );
+    drupal_add_html_head($element, 'og_url');
+    // og:image
+    $element = array('#tag' => 'meta', '#attributes' => array(
+      'property' => 'og:image', 'content' => 'http://' . GTW_URL . '/sites/all/themes/gtw/images/starfish_128.png',
+      ),
+    );
+    drupal_add_html_head($element, 'og_image');
+    // og:description
+    $element = array('#tag' => 'meta', '#attributes' => array(
+      'property' => 'og:description', 'content' => 'My goal for the week of ' . format_date($node->created, 'short'),
+      ),
+    );
+    drupal_add_html_head($element, 'og_url');   
+  }
+} 
+
+/**
+ * Page callback for 'home'
+ */
+function goalthisweek_home() {
+  global $user;
+  if ($user->uid == 0) {
+    return theme('intro');
+  }
+  else {
+    $user = user_load($user->uid);
+    if (!$user->field_account_confirmed || $user->field_account_confirmed[LANGUAGE_NONE][0]['value'] != 1) {
+      drupal_goto('user/' . $user->uid . '/edit', array('query' => array('destination' => 'user/' . $user->uid)));
+    }
+    else {
+      drupal_goto('user/' . $user->uid);
+    }
+  }  
+}
+
+/**
+ * Callback for given uid's user profile
+ */
+function goalthisweek_get_profile($uid) {
+  
+  global $user;
+  // @todo: check user privacy settings for profile
+  /*
+  module_load_include('pages.inc', 'user', 'user');
+  global $user;
+  $output = drupal_render(drupal_get_form('user_profile_form', $user));
+  return $output;
+  */
+  
+  // check for current goal nid for user
+  $nid = goalthisweek_get_current_goal_nid($uid);
+  if ($nid) {
+    $node = node_load($nid);
+    node_view($node);
+    $goal = $node->content_goal;
+  }
+  
+  // else: no current goal
+  else {
+    // if this is my profile, show the new goal form
+    if ($user->uid == $uid) {   
+      $node = new StdClass();
+      $node->nid = 0;
+      $node->username = $user->name;
+      $node->date_start = time();
+      $node->date_due = goalthisweek_get_due_date($node->date_start);
+      $node->uid = $user->uid;
+      $node->content_goal_status = theme('goalthisweek_new');
+      $node->goal_status = -1;
+      $user = user_load($uid);
+      $node->user_privacy = goalthisweek_get_privacy_html($user->field_privacy_profile[LANGUAGE_NONE][0]['value']);      
+      $goal = theme('goalthisweek_goal', array('node' => $node));
+    }
+    else {
+      $goal = '';
+    }
+  }
+  return theme('goalthisweek_profile', array('uid' => $uid, 'goal' => $goal));
+}
+
+/** 
+ * Get goal nid
+ */
+function goalthisweek_get_current_goal_nid($uid) {
+  $result = views_get_view_result('user_current_goal', 'default', $uid);
+  if ($result) {
+    return $result[0]->nid;
+  }
+  return FALSE;
+}
+
+
+/*
+use this to hide node/add/goal if user has a current goal
+function gluecode_menu_alter(&$items) {
+  $items['user/register']['type'] = MENU_CALLBACK;
+  $items['user/password']['type'] = MENU_CALLBACK;
+}
+*/
+
+function goalthisweek_get_status_desc($key) {
+  
+  switch ($key) {
+    case 0:
+      return 'In Progress';
+    case 1:
+      return '<span class="completed">Completed</span>';
+    case 2:
+      return '<span class="did-not-complete">Did Not Complete</span>';
+    default:
+      return 'Expired';
+  }
+}
+
+function goalthisweek_get_status_icon($key) {
+  switch ($key) {
+    case 1:
+      return '<i class="icon-ok"></i>';
+    case 0:
+      return '<i class="icon-time"></i>';
+    default:
+      return '';
+  }
+}
+
+
+function goalthisweek_get_privacy_html($key) {
+  switch ($key) {
+    case 0:
+      return '<i class="icon-lock"></i> Private';
+    default:
+      return '<i class="icon-globe"></i> Web';
+  }
+}
+
+
+
+
+/**
+ * Returns object of FB Application instance, used for api stuff.
+ *
+ */
+function goalthisweek_get_facebook() {
+
+  require libraries_get_path('facebook-php-sdk') .'/src/facebook.php';
+  $facebook = new Facebook(array(
+    'appId'  => GTW_FB_APP_ID,
+    'secret' => GTW_FB_APP_SECRET,
+  ));
+  return $facebook;
+
+}
+
+function goalthisweek_is_posting_fb() {
+  global $user; 
+  if (!fboauth_fbid_load($user->uid)) {
+    return FALSE;
+  }
+  $user_data = user_load($user->uid);
+  return $user_data->field_privacy_profile['und'][0]['value'];
+}
+
+/** 
+ *
+ * Calculates 1 week from given date
+ * @input - unix time str
+ * @return - unix time str - 1 week later
+ *
+ */
+function goalthisweek_get_due_date($date) {
+  return $date + (7 * 24 * 60 * 60);
+}
+
+
+
+/** 
+ *
+ * Calculates if a week is up or not for given $date
+ *
+ * @input - $node (with duration) 
+ * @output -if time left, return int - num of days. return FALSE if no time left
+ *
+ */
+function goalthisweek_get_time_left($node) {
+
+  $diff = $node->field_duration[LANGUAGE_NONE][0]['value2'] - time();
+  // return # of days
+  return floor($diff/60/60/24);
+  
+}
+
+/**
+ * On cron run, send an email to a user whose goal is due if we haven't sent it already
+ *
+ */
+function goalthisweek_cron() {
+
+  // search for expiration date interval
+  $result = goalthisweek_get_goals_due();
+
+  foreach ($result as $goal) {
+  
+    $module = 'goalthisweek';
+    $key = 'goal_due';
+    $from = 'gtw@goalthisweek.com';
+    $user_account = user_load($goal->uid);
+    $node = node_load($goal->nid);
+    if ($node->field_notified[LANGUAGE_NONE][0]['value'] == 0) {
+      $key = 'goal_due_msg1';
+    }
+    elseif ($node->field_notified[LANGUAGE_NONE][0]['value'] == 1) {
+      $key = 'goal_due_msg2';
+    }
+    $to_user_mail = $user_account->mail;
+
+    // build the email
+    $message = drupal_mail($module, $key, $to_user_mail, LANGUAGE_NONE, array(), $from, FALSE);
+
+    $message['subject'] = 'Your Goal This Week is Due';
+
+    $message['body'] = array();
+    // we'll parse by ||| in the HTML template
+    $message['body'][] = $user_account->name . '|||' . $node->title;
+
+    // retrieve the responsible implementation for this message.
+    $system = drupal_mail_system($module, $key);
+
+    // format the message body.
+    $message = $system->format($message);
+
+    // send e-mail
+    $message['result'] = $system->mail($message);
+    
+    // add a notification for this goal
+    $node->field_notified[LANGUAGE_NONE][0]['value']++;
+    if ($node->field_notified[LANGUAGE_NONE][0]['value'] == 2) {
+      $node->field_status[LANGUAGE_NONE][0]['value'] = 3;
+    }
+    node_save($node);
+  }
+}
+
+
+function goalthisweek_get_goals_due() {
+  
+  // return active goals that have been notified less than 2 times
+  
+  $result = db_query("
+    SELECT field_duration_value2, nid, uid, field_status_value, title, field_notified_value
+    FROM field_data_field_duration d
+    JOIN node n ON d.entity_id=n.nid
+    JOIN field_data_field_status s ON s.entity_id=n.nid
+    JOIN field_data_field_notified m ON m.entity_id=n.nid
+    WHERE field_status_value = 0 
+    AND field_notified_value < 2
+    AND field_duration_value2 <= UNIX_TIMESTAMP();
+  ");    
+  return $result->fetchAll();
+  
+}
+
+
+/** 
+ * Return list of links for user navigation
+ */
+function goalthisweek_user_account_nav() {
+  global $user;
+  $links = array(
+    array(
+      'title' => '<i class="icon-ok"></i> My Goals', 
+      'href' => 'home',
+      'html' => TRUE,
+    ),  
+    array(
+      'title' => '<i class="icon-cog"></i> Settings', 
+      'href' => 'user/' . $user->uid . '/edit',
+      'query' => array(
+        'destination' => 'home',
+      ),
+      'html' => TRUE,
+    ),
+    array(
+      'title' => '<i class="icon-off"></i> Logout', 
+      'href' => 'user/logout',
+      'html' => TRUE,
+    ),
+  );  
+  return $links; 
+}
+
+
+/**
+ * Implements hook_node_access().
+ */
+function goalthisweek_node_access($node, $op, $account) {
+  global $user;
+  
+  // admin sees anyone
+  if ($user->uid == 1) {
+    return NODE_ACCESS_ALLOW;
+  }
+  
+  // check if node is type == goal
+  if (isset($node->type) && $node->type == 'goal') {
+  
+    // if this is your goal, you can always see it
+    if ($node->uid == $user->uid) {
+      return NODE_ACCESS_ALLOW;
+    }
+    
+    //return ALLOW if the node's user profile is public
+    $node_user = user_load($node->uid);
+    if ($node_user->field_privacy_profile[LANGUAGE_NONE][0]['value'] == 1) {
+      return NODE_ACCESS_ALLOW;
+    }
+    
+    // otherwise you can't see other people's goals
+    return NODE_ACCESS_DENY;
+    
+  }
+  return NODE_ACCESS_IGNORE;  
+}  
+
+/** 
+ * Implements hook_user_view().
+ */
+function goalthisweek_user_view($account, $view_mode, $langcode) {
+  if ($view_mode == 'full') {
+
+    global $user;
+    // if you're not the admin
+    // and its not your account
+    // and profile settings are set to private
+    if ($user->uid != 1 && $user->uid != $account->uid &&  !$account->field_privacy_profile[LANGUAGE_NONE][0]['value']) {
+      // go to access denied page
+      drupal_goto(drupal_access_denied());
+    }
+  }
+}
+
+/** 
+ * Returns string of firstname lastname | firstname | username
+ */
+function goalthisweek_get_username($user) {
+  return $user->field_name[LANGUAGE_NONE][0]['safe_value'];
+}
+
+/** 
+ * Implements hook_user_update().
+ */
+function goalthisweek_user_update(&$edit, $account, $category) {
+
+  $user_alias = db_delete('url_alias')
+  ->condition('source', 'user/' . $account->uid)
+  ->execute();
+  /*
+  module_load_include('inc', 'pathauto');
+  module_load_include('inc', 'pathauto.pathauto');
+
+  // Get all nodes that need to be updated
+  $query = db_select('node', 'n');
+  $query->addField('n', 'nid');
+  query->condition('n.uid', $account->uid, '=');
+  $nids = $query->execute()->fetchCol();
+ 
+  foreach ($nids as $nid){
+    $noe_alias = db_delete('url_alias')
+    ->condition('source', 'node/' . $nid)
+    ->execute();
+  }
+  pathauto_node_update_alias_multiple($nids, 'update');
+  */
+   
+  /*
+    //$node = node_load($record['nid']);
+    pathauto_create_alias('goal', $op, "node/" . $record['nid'], array('user' => $account), NULL, $options['language']);
+    //pathauto_node_update_alias($node, 'update', $options = array());    
+  }  
+  // Save current ction for new aliases and change it to delete old one.
+  $alias_action = variable_get('pathauto_update_action', 0);
+  variable_set('pathauto_update_action', PATHAUTO_UPDATE_ACTION_DELETE);
+
+  pathauto_node_update_alias_multiple($nids, 'bulkupdate');
+
+  // Restore original action for new aliases.
+  variable_set('pathauto_update_action', $alias_action);
+/*
+
+
+
+  while($record = $result->fetchAssoc()) {
+    //$node = node_load($record['nid']);
+    pathauto_create_alias('goal', $op, "node/" . $record['nid'], array('user' => $account), NULL, $options['language']);
+    //pathauto_node_update_alias($node, 'update', $options = array());    
+  }  
+  */
+}
+
+
+
+/** code graveyard 
+
+
+  // OLD GET TIME LEFT WITH ISO
+  /*
+  $date = $node->field_duration['und'][0]['value2'];
+  return (isset($date)) ? floor((strtotime($date) - time())/60/60/24) : FALSE;
+  
+  //return 1;
+  return strtotime($node->field_duration['und'][0]['value2'], 'now');
+  $fieldDate = new DateObject($node->field_duration['und'][0]['value2'], date_default_timezone(), DATE_FORMAT_ISO);
+  $nowDate = date_now();
+  return $fieldDate->difference($nowDate, 'days');
+  */
+  // FacebookApiException: The action you're trying to publish is invalid because it does not specify any reference objects. At least one of the following properties must be specified: goal. in BaseFacebook->throwAPIException() (line 1195 of /home/quickf/public_html/goalthisweek.com/sites/all/libraries/facebook-php-sdk/src/base_facebook.php)
+  
+  //$facebook->api('/me/goalthisweek:did_not_complete?goal=http://' . GTW_URL . '/goal/' . $nid . '&access_token=' . $facebook->getAccessToken());
+
+  //http://stackoverflow.com/questions/7686422/using-opengraph-with-php-curl-requests-for-actions?rq=1
+  //$facebook->api('https://graph.facebook.com/me/goalthisweek:did_not_complete?goal=' . $goal_url ,'POST');
+  // this doesnt give me an error but nothing seems to get published
+                  
+  /*
+  // http://stackoverflow.com/questions/10363335/how-can-i-post-to-opengraph-using-php-sdk
+  $params = array('article'=>'http://www.onlytipsandtricks.com.com/test.html','access_token'=>$facebook->getAccessToken());
+
+  $out = $facebook->api('/me/app_namespace:read','post',$params);
+  
+  // setting default duration times in ISO:
+    'value' => time(), //date('Y-m-d H:i:s', strtotime('now')),
+    'value2' => time() + (7 * 24 * 60 * 60), //date('Y-m-d H:i:s', strtotime('+1 week')),  
+**/
