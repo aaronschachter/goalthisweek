@@ -167,7 +167,7 @@ function goalthisweek_fb_action($nid, $action) {
  * Implements hook_user_profile_form_alter().
  */
 function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
-  //dsm($form);
+  dsm($form);
   global $user;
 
   if ($user->uid != 1) {
@@ -176,11 +176,17 @@ function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_i
  
     // If account is not confirmed:
     if (!$user->field_account_confirmed || $user->field_account_confirmed[LANGUAGE_NONE][0]['value'] != 1) {
+      
+      // check to see if default username from account creationis over 15 chars.  if so, trim it.
+      $username_count = strlen($form['account']['name']['#default_value']);
+      if ($username_count > 15) {
+        $oldname = $form['account']['name']['#default_value'];
+        $newname = substr($oldname, 0, 15);
+        $form['account']['name']['#default_value'] = $newname;
+      }
       $form['#prefix'] = '<h4>Setup</h4><p>Before you post your Goal This Week, please review your Profile Settings.';
       $form['account']['name']['#title'] = t('Profile URL'); 
-      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . '<p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';  
-      $form['account']['name']['#size'] = 15;
-      $form['account']['name']['#maxlength'] = 15;    
+      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . $concat_name . '<p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';      
       $form['account']['name']['#rules'] = array(
         array(
           'rule' => 'regexp[/^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/]',
