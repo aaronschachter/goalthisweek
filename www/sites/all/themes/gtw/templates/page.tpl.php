@@ -93,7 +93,7 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
 
 <?php //if ($show_messages && $messages): ?>
   <div id='console' class='container alert-messages'>
-    <div class='message'><?php print $messages; ?></div>
+    <div class='message row'><?php print $messages; ?></div>
   </div>
 <?php //endif; ?>
 
