@@ -231,6 +231,9 @@ div.goal-dates {
 }
 */
 /* user edit form */
+input.username {
+  width: 140px;
+}
 .page-user-edit #console {
   display: none; 
 }

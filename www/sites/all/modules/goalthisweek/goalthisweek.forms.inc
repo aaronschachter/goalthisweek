@@ -178,7 +178,9 @@ function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_i
     if (!$user->field_account_confirmed || $user->field_account_confirmed[LANGUAGE_NONE][0]['value'] != 1) {
       $form['#prefix'] = '<h4>Setup</h4><p>Before you post your Goal This Week, please review your Profile Settings.';
       $form['account']['name']['#title'] = t('Profile URL'); 
-      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . '<p>You cannot change your Profile URL once you have set it, so pick a good one!</p>';        
+      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . '<p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';  
+      $form['account']['name']['#size'] = 15;
+      $form['account']['name']['#maxlength'] = 15;    
       $form['account']['name']['#rules'] = array(
         array(
           'rule' => 'regexp[/^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/]',
