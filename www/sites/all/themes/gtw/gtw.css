@@ -124,13 +124,13 @@ div.goal-dates {
   width: 487px;
 }
 #the-goal {
-  background: white;
+  /* background: white; */
   padding: 10px;
 }
 .goal-row {
   border-top: 1px solid #eee;
   padding: 10px;
-  background: white;
+  /* background: white; */
 }
 .icon-ok {
   opacity: 70%;

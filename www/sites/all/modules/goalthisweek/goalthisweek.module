@@ -347,10 +347,14 @@ function goalthisweek_get_status_desc($key) {
 
 function goalthisweek_get_status_icon($key) {
   switch ($key) {
+    case 0:
+      return '<i class="icon-time"></i>';  
     case 1:
       return '<i class="icon-ok"></i>';
-    case 0:
-      return '<i class="icon-time"></i>';
+    case 2:
+      return '<i class="icon-ban-circle"></i>';
+    case 3:
+      return '<i class="icon-ban-circle"></i>';    
     default:
       return '';
   }
