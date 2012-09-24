@@ -1,6 +1,7 @@
 <?php 
 $node = node_load(117);
-print render(node_view($node)); 
+$node = node_view($node);
+print render($node); 
 ?>
 
 <?php 
