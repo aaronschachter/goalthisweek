@@ -364,9 +364,9 @@ function goalthisweek_get_status_icon($key) {
 function goalthisweek_get_privacy_html($key) {
   switch ($key) {
     case 0:
-      return '<i class="icon-lock"></i> Private';
+      return '<div class="user-private"><i class="icon-lock"></i> Private</div>';
     default:
-      return '<i class="icon-globe"></i> Web';
+      return '<div class=user-public"><i class="icon-globe"></i> Web</div>';
   }
 }
 
