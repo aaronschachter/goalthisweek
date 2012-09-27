@@ -167,7 +167,7 @@ function goalthisweek_fb_action($nid, $action) {
  * Implements hook_user_profile_form_alter().
  */
 function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
-  dsm($form);
+  //dsm($form);
   global $user;
 
   if ($user->uid != 1) {
