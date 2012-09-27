@@ -10,8 +10,10 @@ p {
   cursor: text;
 }
 .container, 
-.navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
-  width: 740px;
+.navbar-static-top .container, 
+.navbar-fixed-top .container, 
+.navbar-fixed-bottom .container {
+/*  width: 740px; */
 }
 .well {
   background: #fffafa;
