@@ -141,7 +141,7 @@ function goalthisweek_form_new_submit($form, &$form_state) {
 }
 
 function goalthisweek_fb_action($nid, $action) {
-  $goal_url = 'http://' . GTW_URL . '/goal/' . $nid;
+  $goal_url = 'http://' . GTW_URL . '/' . drupal_get_path_alias('node/' . $nid);
   $facebook = goalthisweek_get_facebook();  
   $user = $facebook->getUser();
   if ($user) {
@@ -184,10 +184,13 @@ function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_i
         $newname = substr($oldname, 0, 15);
         $form['account']['name']['#default_value'] = $newname;
       }
+      else {
+        $newname = $form['account']['name']['#default_value'];
+      }
       $form['#prefix'] = '<h4>Setup</h4><p>Before you post your Goal This Week, please review your Profile Settings.';
       $form['account']['name']['#title'] = t('Profile URL'); 
       $form['account']['name']['#maxlength'] = 15;
-      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . $concat_name . '<p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';      
+      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . $newname . '<p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';      
       $form['account']['name']['#rules'] = array(
         array(
           'rule' => 'alpha_numeric',
