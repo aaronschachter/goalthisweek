@@ -20,18 +20,18 @@
  */
 $result_count = count($rows);
 ?>
-
 <?php foreach ($rows as $row_count => $row): ?>
-<div class="clearfix goal-row">
-  <div class="left-col">
-    <div><i class="icon-user"></i> <?php print $row['name']; ?></div>
-    <div class="goal-dates goal-date-range">
-      <?php print $row['field_duration']; ?>
-    </div> 
-  </div>                    
-  <div class="goal-title well right-col">
+<div class="row">
+  <div class="span3 goal-dates goal-date-range">
+    <?php print $row['field_duration']; ?>
+  </div>   
+  <div class="span3">
+    <?php print $row['picture']; ?> <?php print $row['name']; ?>
+  </div>                 
+  <div class="span6 goal-title well">
     <?php print goalthisweek_get_status_icon($row['field_status']); ?> <?php print $row['title']; ?>      
   </div>
 </div>
+<hr>
 <?php endforeach; ?>
  

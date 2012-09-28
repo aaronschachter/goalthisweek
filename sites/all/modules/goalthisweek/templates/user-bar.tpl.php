@@ -1,5 +1,7 @@
 <div class="user-bar clearfix">
+  <div class="profile-picture">
   <?php print theme('user_picture', array('account' => $goal_user)); ?>
+  </div>
   <h4>
   <?php if (arg(0) == 'user'): ?>
   <?php print $username; ?>

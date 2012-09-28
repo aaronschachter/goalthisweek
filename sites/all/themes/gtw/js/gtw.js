@@ -35,6 +35,7 @@ jQuery(document).ready(function($) {
   // Code that uses jQuery's $ can follow here.
   // Twitter Bootstrap markup for horizontal forms:
   $('.form-horizontal .form-item').addClass('control-group');
+  $('.profile-picture img').addClass('img-polaroid');
   // Labels:
   $('.form-horizontal .form-type-textfield label').addClass('control-label');
   $("label[for='edit-field-privacy-profile-und'], label[for='edit-url']").addClass('control-label');
