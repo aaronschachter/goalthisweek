@@ -26,6 +26,7 @@ $result_count = count($rows);
     <?php print $row['picture']; ?> 
   </div> 
   <div class="span2">
+    <div><strong><?php print $row['field_name']; ?></strong></div>
     <small><?php print $row['name']; ?></small>
   </div>                   
   <div class="span9">
