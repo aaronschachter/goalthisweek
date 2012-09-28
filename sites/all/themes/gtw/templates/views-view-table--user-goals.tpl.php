@@ -22,17 +22,11 @@ $result_count = count($rows);
 ?>
 
 <?php foreach ($rows as $row_count => $row): ?>
-<div class="clearfix goal-row">
-  <div class="goal-dates left-col">
-    <div class="goal-date-range">
-      <?php print $row['field_duration']; ?> - <?php print $row['field_duration_1']; ?>
-    </div>
-    <div class='goal-status-icon'>
-      <?php print goalthisweek_get_status_icon($row['field_status']); ?></i>
-    </div>   
-  </div>                    
-  <div class="goal-title well right-col">
+<div class="goal-row">
+  <div class="goal-dates"><?php print $row['field_duration']; ?> - <?php print $row['field_duration_1']; ?></div>                 
+  <div class="goal-title well">
     <?php print $row['title']; ?>
+    <span class="pull-right"><?php print goalthisweek_get_status_icon($row['field_status']); ?></i></span>
   </div>
 </div>
 <?php endforeach; ?>
