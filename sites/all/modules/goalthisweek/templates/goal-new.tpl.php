@@ -1,0 +1,1 @@
+<?php print drupal_render(drupal_get_form('goalthisweek_form_new')); ?>
