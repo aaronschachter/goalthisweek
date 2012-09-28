@@ -33,8 +33,13 @@ a:hover {
 }
 .user-bar h4 {
   background: #fffafa;
-  padding: 10px;
-  border: 1px solid #eee;
+  padding: 10px 10px 0 10px;
+}
+.user-bar div.username{
+  padding: 0 10px 10px 10px;
+  border-bottom: 1px solid #eee;  
+  font-size: 0.9em;
+  margin-bottom: 10px;
 }
 input#edit-title {
   width: 100%;

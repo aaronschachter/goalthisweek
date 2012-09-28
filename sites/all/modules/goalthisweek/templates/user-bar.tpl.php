@@ -9,5 +9,6 @@
   <?php print l($username, 'user/' . $uid); ?>
   <?php endif; ?>
   </h4>
+  <div class="username"><?php print $goal_user->name; ?></div>
   <div class="goal-dates"><?php print $privacy; ?></div>
 </div>
