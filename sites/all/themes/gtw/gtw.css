@@ -28,6 +28,8 @@ a:hover {
   padding: 20px 0;
   border-bottom: 1px solid #ddd;
   margin-bottom: 10px;
+  position: fixed;
+  width: 200px;
 }
 .user-bar h4 {
   display: inline;

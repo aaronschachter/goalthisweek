@@ -1,4 +1,4 @@
-<div class="user-bar clearfix">
+<div class="user-bar">
   <div class="profile-picture">
   <?php print theme('user_picture', array('account' => $goal_user)); ?>
   </div>
