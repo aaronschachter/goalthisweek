@@ -455,16 +455,18 @@ function goalthisweek_cron() {
     $node = node_load($goal->nid);
     if ($node->field_notified[LANGUAGE_NONE][0]['value'] == 0) {
       $key = 'goal_due_msg1';
+      $subject = "Your Goal This Week is due.";
     }
     elseif ($node->field_notified[LANGUAGE_NONE][0]['value'] == 1) {
       $key = 'goal_due_msg2';
+      $subject = "Your Goal This Week expired. :(";
     }
     $to_user_mail = $user_account->mail;
 
     // build the email
     $message = drupal_mail($module, $key, $to_user_mail, LANGUAGE_NONE, array(), $from, FALSE);
 
-    $message['subject'] = 'Your Goal This Week is Due';
+    $message['subject'] = $subject;
 
     $message['body'] = array();
     // we'll parse by ||| in the HTML template

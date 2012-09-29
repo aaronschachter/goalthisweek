@@ -15,7 +15,7 @@ $message = substr(strstr($body, '|||'), 3);
 <h2>Create a new <a href="http://goalthisweek.com">Goal This Week</a>.</h2>
 <p>Your Goal Last Week was to:</p>
 <h4><?php echo $message ?></h4>
-<p>It has expired. :\  In a week, you'll have 2 days to login and report on it.<p>
+<p>It has expired. :\  Better luck next time. <a href="http://goalthisweek.com">Login and crete another goal!</a><p>
 
 <p>Rock on,</p>
 <p>-- Goal This Week</p>
