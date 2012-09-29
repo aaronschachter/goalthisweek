@@ -26,21 +26,27 @@ a:hover {
 }
 .user-bar {
   padding: 20px 0;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 10px;
   position: fixed;
   width: 200px;
 }
 .user-bar h4 {
+/*
   background: #fffafa;
   padding: 10px 10px 0 10px;
+*/
 }
 .user-bar div.username{
-  padding: 0 10px 10px 10px;
+/*  padding: 0 10px 10px 10px; */
   border-bottom: 1px solid #eee;  
   font-size: 0.9em;
   margin-bottom: 10px;
   color: #666;
+}
+.user-profile-links {
+  padding: 10px 0;
+}
+.user-profile-social-icons{
+  border-top: 1px solid #eee;
 }
 .user-bar .user-website-url{
   font-size: 0.8em;
@@ -133,13 +139,11 @@ img.fb-post {
   width: 487px;
 }
 #the-goal {
-  /* background: white; */
-  padding: 10px;
+  padding: 10px 0;
 }
 .goal-row {
   border-top: 1px solid #eee;
-  padding: 10px;
-  /* background: white; */
+  padding: 10px 0;
 }
 .icon-ok {
   opacity: 70%;
@@ -158,7 +162,7 @@ img.fb-post {
   float: left;
 }
 #page {
-  min-height: 400px;
+  min-height: 460px;
   background: url('images/graphpaper2.png') fixed repeat-x top center white;
 }
 .gtw-tour h1 {

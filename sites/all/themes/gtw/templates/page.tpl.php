@@ -105,19 +105,17 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
 
 <div id='page'>
   <div class='container'>
-    <div id='main-content' class='row clearfix'> 
+    <div id='main-content' class='row'> 
       <?php if ($user_bar): ?>
-      <div class='span3'>
       <?php print theme('goalthisweek_user_bar', array(
         'goal_user' => $goal_user,
         'username' => $goal_username, 
         'uid' => $goal_uid, 
         'privacy' => $goal_privacy
         )); ?>
-      </div>
-      <?php $content_class = 'offset3'; ?>
+      <?php $content_class = 'offset3 span9'; ?>
       <?php else: ?>
-      <?php $content_class = ''; ?>
+      <?php $content_class = 'span12'; ?>
       <?php endif; ?> 
       <div id='content' class=' <?php print $content_class; ?> clearfix'><?php print render($page['content']) ?></div>
     </div>
