@@ -245,7 +245,7 @@ input.username {
   width: 140px;
 }
 .page-user-edit #console {
- /* display: none; */
+  display: none;
 }
 .page-user-edit .alert-success {
  display: block;
