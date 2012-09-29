@@ -32,7 +32,6 @@ else if (isset($node) && $node->uid == $user->uid) {
   $goal_user = $user;
   $goal_username = goalthisweek_get_username($user);
   $goal_uid = $user->uid;  
-  $goal_privacy = goalthisweek_get_privacy_html($user->field_privacy_profile[LANGUAGE_NONE][0]['value']);  
   $user_bar = TRUE;
 }
 
@@ -42,7 +41,6 @@ else if (isset($node) && $node->uid != $user->uid) {
   $goal_user = user_load($node->uid);
   $goal_username = $node->username;
   $goal_uid = $node->uid;
-  $goal_privacy = goalthisweek_get_privacy_html($node->user_privacy);  
   $user_bar = TRUE;
   $someone_else = TRUE;
 }
@@ -58,7 +56,6 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
     $goal_user = $author;
     $goal_username = goalthisweek_get_username($author);
     $goal_uid = $author->uid;
-    $goal_privacy = goalthisweek_get_privacy_html($privacy);  
     $user_bar = TRUE;
     $someone_else = TRUE;
   }
@@ -111,7 +108,6 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
         'goal_user' => $goal_user,
         'username' => $goal_username, 
         'uid' => $goal_uid, 
-        'privacy' => $goal_privacy
         )); ?>
       <?php $content_class = 'offset3 span9'; ?>
       <?php else: ?>

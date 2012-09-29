@@ -10,6 +10,5 @@
   <?php endif; ?>
   </h4>
   <div class="username"><?php print $goal_user->name; ?></div>
-  <div class="goal-dates"><?php print $privacy; ?></div>
   <?php print theme('goalthisweek_user_profile_links', array('goal_user' => $goal_user)); ?>
 </div>

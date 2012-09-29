@@ -29,11 +29,8 @@ a:hover {
   position: fixed;
   width: 200px;
 }
-.user-bar h4 {
-/*
-  background: #fffafa;
-  padding: 10px 10px 0 10px;
-*/
+.user-bar h4 a{
+  color: #333;
 }
 .user-bar div.username{
 /*  padding: 0 10px 10px 10px; */
