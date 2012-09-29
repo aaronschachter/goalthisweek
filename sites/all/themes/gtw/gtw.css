@@ -245,7 +245,7 @@ input.username {
   width: 140px;
 }
 .page-user-edit #console {
-  display: none; 
+ /* display: none; */
 }
 .page-user-edit .alert-success {
  display: block;
@@ -265,10 +265,17 @@ input.username {
 .user-profile-well {
   margin-top: 20px;
 }
+.profile-web-link label{
+  font-size: 0.8em;
+}
 #user-profile-form #edit-field-privacy-profile-und-1, 
 #user-profile-form #edit-field-privacy-profile-und-0 {
   vertical-align: top;
 }
+.field-name-field-privacy-profile.form-wrapper {
+  padding-top: 20px;
+}
+
 .account-link-info {
   font-size: 0.8em;
   text-align: center;

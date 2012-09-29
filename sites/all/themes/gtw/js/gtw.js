@@ -11,6 +11,12 @@ Drupal.behaviors.myBehavior = {
     $(".not-logged-in .my-goals").click(function () {
       return false;
     });    
+    $("#edit-field-privacy-profile-und-0").click(function () {
+      $('div.profile-web-link').hide();
+    });    
+    $("#edit-field-privacy-profile-und-1").click(function () {
+      $('div.profile-web-link').show();
+    });    
     
     // if username field is visible:
     if ($('input[name="name"]').length > 0){
@@ -42,4 +48,8 @@ jQuery(document).ready(function($) {
   $('.form-horizontal .form-type-textfield label').addClass('control-label');
   $('.form-horizontal .form-text').wrap('<div class="controls" />');
   $('.form-horizontal .form-radios').wrap('<div class="controls" />');
+  if ($('#edit-field-privacy-profile-und-0').is(':checked')) {
+    $('div.profile-web-link').hide();
+  }
+
 });

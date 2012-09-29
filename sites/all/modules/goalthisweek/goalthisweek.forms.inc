@@ -167,7 +167,7 @@ function goalthisweek_fb_action($nid, $action) {
  * Implements hook_user_profile_form_alter().
  */
 function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
-  //dsm($form);
+//  dsm($form);
   global $user;
 
   if ($user->uid != 1) {
@@ -195,17 +195,7 @@ function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_i
         array(
           'rule' => 'alpha_numeric',
           'error' => 'Only letters and numbers are allowed.',
-        ), 
-        /*
-        array(
-          'rule' => 'regexp[/^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/]',
-          'error' => 'Only letters, numbers, and hyphens allowed.',
-        ), 
-        array(
-          'rule' => 'length[3, 15]',
-          'error' => 'Must be between 3-15 characters.',
-        ),
-        */       
+        ),       
       );      
       $form['field_account_confirmed'][LANGUAGE_NONE]['#title'] = 'I agree to the Terms of Service and Privacy Policy.';
       $form['actions']['submit']['#value'] = t('Create my Profile');
@@ -224,11 +214,41 @@ function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_i
       $form['actions']['submit']['#value'] = t('Update Settings');
       
     }
+    
     $form['#attributes']['class'][] = 'form-horizontal well';
-    $form['field_privacy_profile'][LANGUAGE_NONE]['#title'] = 'Visibility';
+    
+    $form['field_privacy_profile']['#prefix'] = '<legend>Privacy</legend>';
+    $form['field_privacy_profile'][LANGUAGE_NONE]['#title'] = 'Settings';
+    
     unset($form['account']['fboauth']);
     unset($form['field_post_to_fb']);
-    $form['actions']['submit']['#attributes'] = array('class' => array('btn btn-primary pull-right')); 
+    unset($form['picture']['picture_current']);
+    unset($form['picture']['picture_delete']);
+    unset($form['picture']['picture_upload']['#description']);
+    $form['picture']['picture_upload']['#title'] = 'Change picture';
+    
+    // My website URL.
+    $form['field_website_url']['#prefix'] = '<div class="profile-web-link"><legend>Links</legend><i class="icon-globe"></i> Your website';
+    $form['field_website_url'][LANGUAGE_NONE][0]['value']['#title'] = 'http://';  
+    $form['field_website_url']['#suffix'] = '</div>';
+
+    // Facebook URL.
+    $form['field_facebook_url']['#prefix'] = '<div class="profile-web-link"><img src="' . GTW_FB_ICON .'">';
+    $form['field_facebook_url'][LANGUAGE_NONE][0]['value']['#title'] = 'http://facebook.com/'; 
+    $form['field_facebook_url']['#suffix'] = '</div>';  
+   
+    // Twitter URL.
+    $form['field_twitter_url']['#prefix'] = '<div class="profile-web-link"><img src="' . GTW_TWITTER_ICON .'">';
+    $form['field_twitter_url'][LANGUAGE_NONE][0]['value']['#title'] = 'http://twitter.com/';  
+    $form['field_twitter_url']['#suffix'] = '</div>';  
+    
+    // LinkedIn URL.
+    $form['field_linkedin_url']['#prefix'] = '<div class="profile-web-link"><img src="' . GTW_LINKEDIN_ICON .'">';
+    $form['field_linkedin_url'][LANGUAGE_NONE][0]['value']['#title'] = 'http://linkedin.com/in/';
+    $form['field_linkedin_url']['#suffix'] = '</div>';  
+                
+    $form['actions']['submit']['#attributes'] = array('class' => array('btn btn-primary pull-right'));
+    
     $form['#suffix'] = '<div class="account-link-info">' . t('Your Goal This Week account is linked to your Facebook account. ') . l('Info', 'user/' . $user->uid . '/fboauth') . '</div>';
   }  
 }
