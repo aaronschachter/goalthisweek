@@ -40,6 +40,10 @@ a:hover {
   border-bottom: 1px solid #eee;  
   font-size: 0.9em;
   margin-bottom: 10px;
+  color: #666;
+}
+.user-bar .user-website-url{
+  font-size: 0.8em;
 }
 input#edit-title {
   width: 100%;

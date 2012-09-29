@@ -9,6 +9,10 @@ define('GTW_FB_APP_SECRET', 'e4ca44bdbb922d07cdf62507d7a42544');
 define('GTW_SEPARATOR', ' | ');
 define('FB_ICON', $base_url . '/' . drupal_get_path('module', 'goalthisweek') . '/images/facebook_16.png');
 define('FB_POST_DESC', '<img src="' . FB_ICON . '" class="fb-post">' . t('Post to Timeline'));
+// social icons
+define('GTW_FB_ICON', $base_url . '/' . drupal_get_path('theme', 'gtw') . '/images/icons/facebook.png');
+define('GTW_TWITTER_ICON', $base_url . '/' . drupal_get_path('theme', 'gtw') . '/images/icons/twitter.png');
+define('GTW_LINKEDIN_ICON', $base_url . '/' . drupal_get_path('theme', 'gtw') . '/images/icons/linkedin.png');
 include_once 'goalthisweek.forms.inc';
 
 /**
@@ -58,6 +62,12 @@ function goalthisweek_theme() {
       ),
       'template' => 'templates/user-bar',
     ),
+    'goalthisweek_user_profile_links' => array(
+      'variables' => array(
+        'goal_user' => NULL,
+      ),
+      'template' => 'templates/user-profile-links',
+    ),    
     'goalthisweek_login_block' => array(
       'variables' => NULL,
       'template' => 'templates/login-block',
