@@ -21,6 +21,12 @@ p {
 .navbar .brand {
   font-size: 16px;
 }
+.or-privately {
+  color: #ccc;
+}
+.learn-more {
+  font-size: 0.8em;
+}
 a:hover {
   text-decoration: none;
 }
