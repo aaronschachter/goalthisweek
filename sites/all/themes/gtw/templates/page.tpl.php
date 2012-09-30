@@ -5,6 +5,7 @@ $itsmine = '';
 $user_bar = FALSE;
 $someone_else = FALSE;
 $web = FALSE;
+$path = $_GET['q'];
 
 // If this is the tour page:
 if (isset($node) && $node->type == 'tour') {
@@ -64,6 +65,18 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
     $user_bar = FALSE;
   }
 }
+
+$display_top_well = FALSE;
+// Top well. (Web, about, thing
+if (drupal_is_front_page() || ($path == 'web')) {
+  $display_top_well = TRUE;
+  if ($user->uid == 0) {
+    $top_well = 'Goal This Week is a free web app for posting 1 goal a week on the web (or privately).<span class="pull-right">' . l('Learn more.', 'about') . '</span>';
+  }
+  else {
+    $top_well = 'Web';
+  }
+}
 ?>
 
 <div class="navbar navbar-fixed-top">
@@ -73,6 +86,7 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
         <div class="brand span3">
           <?php print l('Goal This Week', '<front>', array('html' => 'true')); ?>
         </div>      
+        <?php if ($user->uid >0): ?>
         <ul class="links nav primary-links">
           <li class="my-goals first <?php print $itsmine ?> last">
             <?php print l('My Goals', '<front>'); ?>
@@ -81,6 +95,7 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
             <?php print l('Web', 'web'); ?>
           </li>        
         </ul>
+        <?php endif; ?>
         <div id='user-nav' class='pull-right'>
           <?php if ($user->uid >0): ?>
           <?php $nav_title = "<i class='icon-user'></i> " .goalthisweek_get_username($user); ?>
@@ -103,6 +118,9 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
 <div id='page'>
   <div class='container'>
     <div id='main-content' class='row'> 
+      <?php if ($display_top_well): ?>
+      <div class="well"><?php print $top_well; ?></div>
+      <?php endif; ?>
       <?php if ($user_bar): ?>
       <?php print theme('goalthisweek_user_bar', array(
         'goal_user' => $goal_user,

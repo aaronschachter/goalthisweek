@@ -264,7 +264,7 @@ function goalthisweek_node_view($node, $view_mode = 'full', $langcode = NULL) {
 function goalthisweek_home() {
   global $user;
   if ($user->uid == 0) {
-    return theme('intro');
+    return views_embed_view('web_goals', 'default');
   }
   else {
     $user = user_load($user->uid);
