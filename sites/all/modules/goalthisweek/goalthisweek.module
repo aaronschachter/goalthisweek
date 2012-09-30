@@ -283,13 +283,6 @@ function goalthisweek_home() {
 function goalthisweek_get_profile($uid) {
   
   global $user;
-  // @todo: check user privacy settings for profile
-  /*
-  module_load_include('pages.inc', 'user', 'user');
-  global $user;
-  $output = drupal_render(drupal_get_form('user_profile_form', $user));
-  return $output;
-  */
   
   // check for current goal nid for user
   $nid = goalthisweek_get_current_goal_nid($uid);
@@ -333,14 +326,11 @@ function goalthisweek_get_current_goal_nid($uid) {
   return FALSE;
 }
 
-
-/*
-use this to hide node/add/goal if user has a current goal
-function gluecode_menu_alter(&$items) {
-  $items['user/register']['type'] = MENU_CALLBACK;
-  $items['user/password']['type'] = MENU_CALLBACK;
+function goalthisweek_menu_alter(&$items) { 
+  $items['user/register']['access callback'] = FALSE; 
+  $items['user/password']['access callback'] = FALSE;    
 }
-*/
+
 
 function goalthisweek_get_status_desc($key) {
   
