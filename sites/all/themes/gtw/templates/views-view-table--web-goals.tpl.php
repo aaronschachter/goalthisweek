@@ -21,7 +21,7 @@
 $result_count = count($rows);
 ?>
 <?php foreach ($rows as $row_count => $row): ?>
-<div class="row">
+<div class="clearfix">
   <div class="span1">
     <?php print $row['picture']; ?> 
   </div> 

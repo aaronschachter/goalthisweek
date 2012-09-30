@@ -111,7 +111,7 @@ else if (arg(0) == 'user' && (arg(1) != $user->uid) && is_numeric(arg(1))) {
         )); ?>
       <?php $content_class = 'offset3 span9'; ?>
       <?php else: ?>
-      <?php $content_class = 'span12'; ?>
+      <?php $content_class = ''; ?>
       <?php endif; ?> 
       <div id='content' class=' <?php print $content_class; ?> clearfix'><?php print render($page['content']) ?></div>
     </div>
