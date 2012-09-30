@@ -71,7 +71,7 @@ $display_top_well = FALSE;
 if (drupal_is_front_page() || ($path == 'web')) {
   $display_top_well = TRUE;
   if ($user->uid == 0) {
-    $top_well = '<i class="icon-globe"></i> Goal This Week is a free web app for posting 1 goal a week on the web <span class="or-privately">(or privately).</span> <span class="pull-right learn-more">' . l('Learn more.', 'about') . '</span>';
+    $top_well = '<i class="icon-globe"></i> <strong>Goal This Week</strong> is a free web app for posting 1 goal a week on the web <span class="or-privately">(or privately).</span> <span class="pull-right learn-more">' . l('Learn more.', 'about') . '</span>';
   }
   else {
     $top_well = '<i class="icon-globe"></i> <span class="goal-dates">Web</span>';
