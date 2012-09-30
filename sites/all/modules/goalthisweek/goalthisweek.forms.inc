@@ -190,7 +190,7 @@ function goalthisweek_form_user_profile_form_alter(&$form, &$form_state, $form_i
       $form['#prefix'] = '<h4>Setup</h4><p>Before you post your Goal This Week, please review your Profile Settings.';
       $form['account']['name']['#title'] = t('Profile URL'); 
       $form['account']['name']['#maxlength'] = 15;
-      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span>' . $newname . '<p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';      
+      $form['account']['name']['#description'] = 'http://goalthisweek.com/<span id="username-preview">[your_profile_url]</span><p>Max 15 characters. You cannot change your Profile URL once you have set it, so pick a good one!</p>';      
       $form['account']['name']['#rules'] = array(
         array(
           'rule' => 'alpha_numeric',
