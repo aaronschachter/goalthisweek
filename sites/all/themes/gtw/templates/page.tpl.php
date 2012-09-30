@@ -74,7 +74,7 @@ if (drupal_is_front_page() || ($path == 'web')) {
     $top_well = 'Goal This Week is a free web app for posting 1 goal a week on the web (or privately).<span class="pull-right">' . l('Learn more.', 'about') . '</span>';
   }
   else {
-    $top_well = 'Web';
+    $top_well = '<i class="icon-globe"></i> <span class="goal-dates">Web</span>';
   }
 }
 ?>
