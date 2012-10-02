@@ -12,10 +12,10 @@ $message = substr(strstr($body, '|||'), 3);
 <h3><a href="http://goalthisweek.com" style="text-decoration:none;">Goal This Week</a></h3>
 
 <p>Hi <?php echo $mail_parts[0]; ?>,</p>
-<h2>Create a new <a href="http://goalthisweek.com">Goal This Week</a>.</h2>
 <p>Your Goal Last Week was to:</p>
 <h4><?php echo $message ?></h4>
-<p>It has expired. :\  Better luck next time. <a href="http://goalthisweek.com">Login and crete another goal!</a><p>
+<p>It has expired. :\  Better luck next time. </p>
+<p><a href="http://goalthisweek.com">Login and create a new Goal This Week.</a><p>
 
 <p>Rock on,</p>
 <p>-- Goal This Week</p>
