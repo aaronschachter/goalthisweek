@@ -473,9 +473,13 @@ function goalthisweek_cron() {
     
     // add a notification for this goal
     $node->field_notified[LANGUAGE_NONE][0]['value']++;
+
+    // Set status to expired if this is the 2nd email.
     if ($node->field_notified[LANGUAGE_NONE][0]['value'] == 2) {
       $node->field_status[LANGUAGE_NONE][0]['value'] = 3;
     }
+
+    // Save changes to node.
     node_save($node);
   }
 }
