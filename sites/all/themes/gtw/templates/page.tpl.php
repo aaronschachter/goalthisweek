@@ -139,7 +139,7 @@ if (drupal_is_front_page() || ($path == 'web')) {
 <div id="footer">
   <div class='container'>
     <div class="row well">
-      &copy 2012 Goal This Week | <?php print l('About', 'about'); ?> | <a href="http://www.facebook.com/pages/Goal-This-Week/347730941972712" target="_blank"><img src="<?php print GTW_FB_ICON; ?>"</a> <a href="http://www.twitter.com/goalthisweek" target="_blank"><img src="<?php print GTW_TWITTER_ICON; ?>"></a><span class="pull-right"><?php print l('Terms', 'tos'); ?> | <?php print l('Privacy', 'privacy'); ?></span>
+      &copy 2012 Goal This Week | <?php print l('About', 'about'); ?> | <a href="http://www.facebook.com/goalthisweek" target="_blank"><img src="<?php print GTW_FB_ICON; ?>"</a> <a href="http://www.twitter.com/goalthisweek" target="_blank"><img src="<?php print GTW_TWITTER_ICON; ?>"></a><span class="pull-right"><?php print l('Terms', 'tos'); ?> | <?php print l('Privacy', 'privacy'); ?></span>
     </div>
   </div>
 </div>
